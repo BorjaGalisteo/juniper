@@ -111,13 +111,11 @@ class Availability
 		$searchSegmentHotels  = new JP_SearchSegmentHotels($this->nights->startToString(), $this->nights->endToString(),
 			$OriginZone = null, $JPDCode = null,
 			$DestinationZone = null);
-		$arrayOfString        = new ArrayOfString5();
-		$hotelCodes           = $arrayOfString->setHotelCode($hotels_code);
 		$searchSegmentsHotels = new JP_SearchSegmentsHotels();
 		$searchSegmentsHotels->setSearchSegmentHotels($searchSegmentHotels)
 			->setCountryOfResidence($this->country->isoCode())
 			->setNights($this->nights->number())
-			->setHotelCodes($hotelCodes);
+			->setHotelCodes($hotels_code);
 
 		return $searchSegmentsHotels;
 	}

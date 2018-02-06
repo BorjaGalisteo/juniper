@@ -58,12 +58,10 @@ class BookingRules
 	{
 		$hotels_code = [$hotel_code];
 
-		$arrayOfString        = new ArrayOfString5();
-		$hotelCodes           = $arrayOfString->setHotelCode($hotels_code);
 		$searchSegmentHotels  = new JP_SearchSegmentHotels($rate->start(), $rate->end(), $OriginZone = null,
 			$JPDCode = null, $DestinationZone = null);
 		$searchSegmentsHotels = new JP_SearchSegmentsHotels();
-		$searchSegmentsHotels->setHotelCodes($hotelCodes);
+		$searchSegmentsHotels->setHotelCodes($hotels_code);
 		$searchSegmentsHotels->setSearchSegmentHotels($searchSegmentHotels);
 		$hotelBookingRuleRQ = new JP_HotelBookingRuleRQ(WebService::JUNIPER_WS_VERSION,
 			$this->juniperWebService->language());

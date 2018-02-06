@@ -159,7 +159,7 @@ class JP_SearchSegmentsHotels
     }
 
     /**
-     * @param ArrayOfString5 $HotelCodes
+     * @param array $HotelCodes
      * @return JP_SearchSegmentsHotels
      */
     public function setHotelCodes($HotelCodes)
