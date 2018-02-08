@@ -10,6 +10,8 @@ use Juniper\Webservice\WebServiceJP;
  */
 class WebService
 {
+	const TIMEOUT = 0;
+	
 	const JUNIPER_WS_VERSION = "1.1";
 
 	const DEFAULT_LANGUAGE = "en";
@@ -23,8 +25,9 @@ class WebService
 	 * ServiceRequest constructor.
 	 * @param Wsdl $wsdl
 	 * @param bool $trace
+	 * @param int $timeout
 	 */
-	public function __construct(Wsdl $wsdl = null, $trace = false)
+	public function __construct(Wsdl $wsdl = null, $trace = false, $timeout = self::TIMEOUT)
 	{
 		$wsdl_url = (null == $wsdl) ? null : $wsdl->url();
 
@@ -33,6 +36,7 @@ class WebService
 				| SOAP_COMPRESSION_GZIP
 				| SOAP_COMPRESSION_DEFLATE,
 			"trace" => $trace,
+			"connection_timeout" => $timeout,
 		],
 			$wsdl_url
 		);
