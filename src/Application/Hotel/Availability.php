@@ -2,9 +2,7 @@
 
 namespace StayForLong\Juniper\Application\Hotel;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Juniper\Webservice\ArrayOfJP_RelPax;
-use Juniper\Webservice\ArrayOfString5;
 use Juniper\Webservice\HotelAvail;
 use Juniper\Webservice\JP_HotelAvail;
 use Juniper\Webservice\JP_HotelAvailAdvancedOptions;
@@ -29,6 +27,9 @@ use StayForLong\Juniper\Infrastructure\Services\WebService;
  */
 class Availability
 {
+
+	private const DEFAULT_PHP_SOCKET_TIMEOUT = 60;
+
 	/**
 	 * @var JuniperWebService
 	 */
@@ -53,6 +54,10 @@ class Availability
 	 * @var JP_RelPaxesDist
 	 */
 	private $roomsRelPaxes;
+	/**
+	 * @var int
+	 */
+	private $timeout;
 
 	/**
 	 * Availability constructor.
@@ -60,19 +65,23 @@ class Availability
 	 * @param Pax[] $paxes
 	 * @param Nights $nights
 	 * @param Country $country
+	 * @param array $roomsRelPaxes
+	 * @param int $timeout
 	 */
 	public function __construct(
 		JuniperWebService $juniperWebService,
 		$paxes,
 		Nights $nights,
 		Country $country,
-		array $roomsRelPaxes
+		array $roomsRelPaxes,
+		int $timeout = self::DEFAULT_PHP_SOCKET_TIMEOUT
 	) {
 		$this->juniperWebService = $juniperWebService;
 		$this->paxes             = $paxes;
 		$this->nights            = $nights;
 		$this->country           = $country;
 		$this->roomsRelPaxes     = $roomsRelPaxes;
+		$this->timeout           = $timeout;
 	}
 
 	/**
@@ -101,6 +110,7 @@ class Availability
 
 		return $response->getAvailabilityRS()->getResults()->getHotelResult();
 	}
+
 
 	/**
 	 * @param array $hotels_code
@@ -210,7 +220,18 @@ class Availability
 	private function getHotelAvail($hotelAvailRQ)
 	{
 		$hotelAvail = new HotelAvail($hotelAvailRQ);
-		$response   = $this->juniperWebService->service()->HotelAvail($hotelAvail);
+
+		$default_socket_timeout = ini_get('default_socket_timeout');
+		if (empty($default_socket_timeout)) {
+			$default_socket_timeout = self::DEFAULT_PHP_SOCKET_TIMEOUT;
+		}
+		try {
+			ini_set('default_socket_timeout', $this->timeout);
+			$response = $this->juniperWebService->service()->HotelAvail($hotelAvail);
+		} finally {
+			ini_set('default_socket_timeout', $default_socket_timeout);
+		}
+
 		return $response;
 	}
 }
