@@ -58,6 +58,10 @@ class Availability
 	 * @var int
 	 */
 	private $timeout;
+	/**
+	 * @var bool
+	 */
+	private $best_price;
 
 	/**
 	 * Availability constructor.
@@ -67,6 +71,7 @@ class Availability
 	 * @param Country $country
 	 * @param array $roomsRelPaxes
 	 * @param int $timeout
+	 * @param bool $best_price
 	 */
 	public function __construct(
 		JuniperWebService $juniperWebService,
@@ -74,14 +79,17 @@ class Availability
 		Nights $nights,
 		Country $country,
 		array $roomsRelPaxes,
-		int $timeout = self::DEFAULT_PHP_SOCKET_TIMEOUT
-	) {
+		int $timeout = self::DEFAULT_PHP_SOCKET_TIMEOUT,
+		bool $best_price = false
+	)
+	{
 		$this->juniperWebService = $juniperWebService;
 		$this->paxes             = $paxes;
 		$this->nights            = $nights;
 		$this->country           = $country;
 		$this->roomsRelPaxes     = $roomsRelPaxes;
 		$this->timeout           = $timeout;
+		$this->best_price        = $best_price;
 	}
 
 	/**
@@ -180,7 +188,7 @@ class Availability
 		$advancedOptions->setExcludeNonRefundable(false);
 		$advancedOptions->setShowCancellationPolicies(true);
 		$advancedOptions->setShowAllCombinations(false);
-		$advancedOptions->setShowOnlyBestPriceCombination(false);
+		$advancedOptions->setShowOnlyBestPriceCombination($this->best_price);
 		$advancedOptions->setShowAllChildrenCombinations(true);
 
 		return $advancedOptions;
@@ -192,7 +200,8 @@ class Availability
 	 */
 	private function getHotelAvailRQ(
 		JP_RequestHotelsAvail $JP_RequestHotelsAvail
-	) {
+	)
+	{
 		$JP_HotelAvailAdvancedOptions = $this->getAdvancedOptions();
 
 		$hotelAvailRQ = new JP_HotelAvail(WebService::JUNIPER_WS_VERSION, $this->juniperWebService->language());
