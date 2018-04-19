@@ -62,6 +62,10 @@ class Availability
 	 * @var bool
 	 */
 	private $best_price;
+	/**
+	 * @var string
+	 */
+	private $currency;
 
 	/**
 	 * Availability constructor.
@@ -70,6 +74,7 @@ class Availability
 	 * @param Nights $nights
 	 * @param Country $country
 	 * @param array $roomsRelPaxes
+	 * @param string $currency
 	 * @param int $timeout
 	 * @param bool $best_price
 	 */
@@ -79,6 +84,7 @@ class Availability
 		Nights $nights,
 		Country $country,
 		array $roomsRelPaxes,
+		string $currency,
 		int $timeout = self::DEFAULT_PHP_SOCKET_TIMEOUT,
 		bool $best_price = false
 	)
@@ -88,6 +94,7 @@ class Availability
 		$this->nights            = $nights;
 		$this->country           = $country;
 		$this->roomsRelPaxes     = $roomsRelPaxes;
+		$this->currency          = $currency;
 		$this->timeout           = $timeout;
 		$this->best_price        = $best_price;
 	}
@@ -190,6 +197,7 @@ class Availability
 		$advancedOptions->setShowAllCombinations(false);
 		$advancedOptions->setShowOnlyBestPriceCombination($this->best_price);
 		$advancedOptions->setShowAllChildrenCombinations(true);
+		$advancedOptions->setUseCurrency($this->currency);
 
 		return $advancedOptions;
 	}
