@@ -37,6 +37,7 @@ class WebService
 				| SOAP_COMPRESSION_DEFLATE,
 			"trace" => $trace,
 			"connection_timeout" => $timeout,
+			"keep_alive" => false,
 		],
 			$wsdl_url
 		);
