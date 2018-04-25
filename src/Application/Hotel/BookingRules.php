@@ -4,9 +4,9 @@ namespace StayForLong\Juniper\Application\Hotel;
 
 
 use Juniper\Webservice\ArrayOfJP_RelPax;
-use Juniper\Webservice\ArrayOfString5;
 use Juniper\Webservice\HotelBookingRules;
 use Juniper\Webservice\JP_HotelBookingRuleRQ;
+use Juniper\Webservice\JP_HotelBookingRulesAdvancedOptions;
 use Juniper\Webservice\JP_HotelBookingRulesRequest;
 use Juniper\Webservice\JP_HotelOptionBookingRules;
 use Juniper\Webservice\JP_HotelOptionRequest;
@@ -51,10 +51,11 @@ class BookingRules
 	 * @param Rate $rate
 	 * @param string $hotel_code
 	 * @param string $reference
+	 * @param string $currency
 	 * @param array $comments
 	 * @return BookingRulesValueObject[]
 	 */
-	public function __invoke(Rate $rate, $hotel_code, $reference, array $comments = [])
+	public function __invoke(Rate $rate, $hotel_code, $reference, string $currency, array $comments = [])
 	{
 		$hotels_code = [$hotel_code];
 
@@ -84,6 +85,9 @@ class BookingRules
 		$paxes = new JP_Paxes($AdultsFree = 0, $ChildrenFree = 0);
 		$paxes->setPax($jp_pax);
 
+		$JP_HotelBookingRulesAdvancedOptions = new JP_HotelBookingRulesAdvancedOptions();
+		$JP_HotelBookingRulesAdvancedOptions->setUseCurrency($currency);
+		$hotelBookingRuleRQ->setAdvancedOptions($JP_HotelBookingRulesAdvancedOptions);
 		$hotelBookingRuleRQ->setLogin($this->juniperWebService->login())
 			->setHotelBookingRulesRequest($hotelBookingRulesRequest)
 			->setPaxes($paxes);
