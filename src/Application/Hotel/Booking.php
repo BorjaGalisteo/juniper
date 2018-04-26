@@ -12,6 +12,7 @@ use Juniper\Webservice\JP_Comment;
 use Juniper\Webservice\JP_CommentType;
 use Juniper\Webservice\JP_Holder;
 use Juniper\Webservice\JP_HotelBooking;
+use Juniper\Webservice\JP_HotelBookingAdvancedOptions;
 use Juniper\Webservice\JP_HotelBookingInfo;
 use Juniper\Webservice\JP_HotelElement;
 use Juniper\Webservice\JP_HotelRelPaxDist;
@@ -83,6 +84,10 @@ class Booking
 			->setComments($this->getComments())
 			->setExternalBookingReference($bookingRules->reference())
 			->setElements($this->getHotelElements());
+
+		$JP_HotelBookingAdvancedOptions = new JP_HotelBookingAdvancedOptions();
+		$JP_HotelBookingAdvancedOptions->setUseCurrency($this->bookingRules->currency());
+		$JP_HotelBooking->setAdvancedOptions($JP_HotelBookingAdvancedOptions);
 
 		$hotelBooking = new HotelBooking($JP_HotelBooking);
 		
