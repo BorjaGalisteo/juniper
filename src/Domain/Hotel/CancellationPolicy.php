@@ -19,10 +19,12 @@ class CancellationPolicy
 
 	/** @var float */
 	private $percentPrice;
-	/**
-	 * @var string
-	 */
+
+	/** @var string */
 	private $currencyCode;
+
+	/** @var int */
+	private $nights;
 
 	/**
 	 * CancellationPolicy constructor.
@@ -30,14 +32,16 @@ class CancellationPolicy
 	 * @param Carbon $dateTo
 	 * @param float $fixedPrice
 	 * @param float $percentPrice
+	 * @param int $nights
 	 * @param string $currencyCode
 	 */
-	public function __construct(Carbon $dateFrom, Carbon $dateTo, $fixedPrice, $percentPrice, $currencyCode)
+	public function __construct(Carbon $dateFrom, Carbon $dateTo, float $fixedPrice, float $percentPrice, int $nights, string $currencyCode)
 	{
 		$this->dateFrom     = $dateFrom;
 		$this->dateTo       = $dateTo;
 		$this->fixedPrice   = $fixedPrice;
 		$this->percentPrice = $percentPrice;
+		$this->nights       = $nights;
 		$this->currencyCode = $currencyCode;
 	}
 
@@ -72,7 +76,15 @@ class CancellationPolicy
 	{
 		return $this->percentPrice;
 	}
-	
+
+	/**
+	 * @return int
+	 */
+	public function nights(): int
+	{
+		return $this->nights;
+	}
+
 	/**
 	 * @return string
 	 */
