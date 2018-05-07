@@ -62,6 +62,7 @@ class BookingRulesTransformer
 				Carbon::parse($cancellationPolicy->getDateTo() . " " . $cancellationPolicy->getDateToHour()),
 				$cancellationPolicy->getFixedPrice(),
 				$cancellationPolicy->getPercentPrice(),
+				$cancellationPolicy->getNights(),
 				$this->bookingRules->getCancellationPolicy()->getCurrencyCode()
 			);
 		}
