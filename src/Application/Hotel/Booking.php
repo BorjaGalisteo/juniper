@@ -205,7 +205,7 @@ class Booking
 		$JP_HotelBookingInfo = new JP_HotelBookingInfo($this->nights->startToString(), $this->nights->endToString());
 		$JP_HotelBookingInfo
 			->setHotelCode($this->bookingRules->hotelCode())
-			->setStatus(new JP_AvailStatus(JP_AvailStatus::__default))
+			->setStatus(JP_AvailStatus::__default)
 			->setPrice($bookingPrice);
 
 
