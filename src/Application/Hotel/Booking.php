@@ -7,6 +7,7 @@ use Juniper\Webservice\ArrayOfJP_HotelElement;
 use Juniper\Webservice\ArrayOfJP_RelPax;
 use Juniper\Webservice\ArrayOfJP_RelPaxDist;
 use Juniper\Webservice\HotelBooking;
+use Juniper\Webservice\JP_AvailStatus;
 use Juniper\Webservice\JP_BookingPrice;
 use Juniper\Webservice\JP_Comment;
 use Juniper\Webservice\JP_CommentType;
@@ -204,6 +205,7 @@ class Booking
 		$JP_HotelBookingInfo = new JP_HotelBookingInfo($this->nights->startToString(), $this->nights->endToString());
 		$JP_HotelBookingInfo
 			->setHotelCode($this->bookingRules->hotelCode())
+			->setStatus(new JP_AvailStatus(JP_AvailStatus::__default))
 			->setPrice($bookingPrice);
 
 
