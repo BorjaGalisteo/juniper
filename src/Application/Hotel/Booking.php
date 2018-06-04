@@ -22,6 +22,7 @@ use Juniper\Webservice\JP_Paxes;
 use Juniper\Webservice\JP_PriceRange;
 use Juniper\Webservice\JP_RelPax;
 use StayForLong\Juniper\Domain\Hotel\BookingRules;
+use StayForLong\Juniper\Domain\Hotel\Country;
 use StayForLong\Juniper\Domain\Hotel\Holder;
 use StayForLong\Juniper\Domain\Hotel\Nights;
 use StayForLong\Juniper\Domain\Hotel\Pax;
@@ -34,25 +35,18 @@ use StayForLong\Juniper\Infrastructure\Services\WebService;
  */
 class Booking
 {
-	/**
-	 * @var JuniperWebService
-	 */
+	/** @var JuniperWebService */
 	private $juniperWebService;
-
-	/**
-	 * @var Pax[]
-	 */
+	/** @var Pax[] */
 	private $paxes;
-
-	/**
-	 * @var Nights
-	 */
+	/** @var Nights */
 	private $nights;
-
 	/** @var BookingRules */
 	private $bookingRules;
 	/** @var Holder */
 	private $holder;
+	/** @var Country */
+	private $country;
 
 	/**
 	 * BookingRules constructor.
@@ -60,13 +54,20 @@ class Booking
 	 * @param Pax[] $paxes
 	 * @param Holder $holder
 	 * @param Nights $nights
+	 * @param Country $country
 	 */
-	public function __construct(JuniperWebService $juniperWebService, $paxes, Holder $holder, Nights $nights)
-	{
+	public function __construct(
+		JuniperWebService $juniperWebService,
+		$paxes,
+		Holder $holder,
+		Nights $nights,
+		Country $country
+	) {
 		$this->juniperWebService = $juniperWebService;
 		$this->paxes             = $paxes;
 		$this->holder            = $holder;
 		$this->nights            = $nights;
+		$this->country           = $country;
 	}
 
 	/**
@@ -161,7 +162,8 @@ class Booking
 			return (new JP_Pax($pax->idPax(), $gender = null))
 				->setAge($pax->age())
 				->setName($pax->name())
-				->setSurname($pax->surname());
+				->setSurname($pax->surname())
+				->setCountry($this->country->isoCode());
 		}, $this->paxes);
 
 		$jp_pax[] = (new JP_Pax($this->getHolderId(), $gender = null))
