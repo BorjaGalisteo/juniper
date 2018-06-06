@@ -163,7 +163,7 @@ class Booking
 				->setAge($pax->age())
 				->setName($pax->name())
 				->setSurname($pax->surname())
-				->setCountry($this->country->isoCode());
+				->setNationality($this->country->isoCode());
 		}, $this->paxes);
 
 		$jp_pax[] = (new JP_Pax($this->getHolderId(), $gender = null))
