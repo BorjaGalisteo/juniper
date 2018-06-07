@@ -52,7 +52,7 @@ class Pax
 	 */
 	public function age()
 	{
-		return $this->age;
+		return $this->age ?? 30;
 	}
 
 	/**
