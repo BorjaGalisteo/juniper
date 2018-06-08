@@ -92,7 +92,7 @@ class Booking
 		$JP_HotelBooking->setAdvancedOptions($JP_HotelBookingAdvancedOptions);
 
 		$hotelBooking = new HotelBooking($JP_HotelBooking);
-		
+
 		$response = $this->juniperWebService->service()->HotelBooking($hotelBooking);
 
 		if ($response->getBookingRS()->getErrors()) {
@@ -169,7 +169,8 @@ class Booking
 		$jp_pax[] = (new JP_Pax($this->getHolderId(), $gender = null))
 			->setAge($this->holder->age())
 			->setName($this->holder->name())
-			->setSurname($this->holder->surname());
+			->setSurname($this->holder->surname())
+			->setNationality($this->country->isoCode());
 
 		$paxes = new JP_Paxes($AdultsFree = 0, $ChildrenFree = 0);
 		$paxes->setPax($jp_pax);
