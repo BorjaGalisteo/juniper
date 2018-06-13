@@ -44,8 +44,6 @@ class BookingRulesTransformer
 	 */
 	public function transform()
 	{
-		$expirationDate = Carbon::instance($this->bookingRules->getBookingCode()->getExpirationDate());
-
 		$prices       = $this->bookingRules->getPriceInformation()->getPrices();
 		$prices_count = $this->bookingRules->getPriceInformation()->getPrices()->count();
 
@@ -55,17 +53,7 @@ class BookingRulesTransformer
 			$this->bookingRules->getBookingCode()->getExpirationDate()
 		);
 
-		$cancellationPolicies = [];
-		foreach ($this->bookingRules->getCancellationPolicy()->getPolicyRules() as $cancellationPolicy) {
-			$cancellationPolicies[] = new CancellationPolicy(
-				Carbon::parse($cancellationPolicy->getDateFrom() . " " . $cancellationPolicy->getDateFromHour()),
-				Carbon::parse($cancellationPolicy->getDateTo() . " " . $cancellationPolicy->getDateToHour()),
-				$cancellationPolicy->getFixedPrice(),
-				$cancellationPolicy->getPercentPrice(),
-				$cancellationPolicy->getNights(),
-				$this->bookingRules->getCancellationPolicy()->getCurrencyCode()
-			);
-		}
+		$cancellationPolicies = $this->getCancellationPolicies();
 
 		return (new BookingRules(
 			$bookingCode,
@@ -78,5 +66,28 @@ class BookingRulesTransformer
 			->setMaxPrice($prices[$prices_count - 1]->getTotalFixAmounts()->getNett())
 			->setRecommended($prices->current()->getTotalFixAmounts()->getRecommended())
 			->setCancellationPolicies($cancellationPolicies);
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getCancellationPolicies(): array
+	{
+		$cancellationPolicies = [];
+		if (empty($this->bookingRules->getCancellationPolicy()->getPolicyRules())) {
+			return $cancellationPolicies;
+		}
+
+		foreach ($this->bookingRules->getCancellationPolicy()->getPolicyRules() as $cancellationPolicy) {
+			$cancellationPolicies[] = new CancellationPolicy(
+				Carbon::parse($cancellationPolicy->getDateFrom() . " " . $cancellationPolicy->getDateFromHour()),
+				Carbon::parse($cancellationPolicy->getDateTo() . " " . $cancellationPolicy->getDateToHour()),
+				$cancellationPolicy->getFixedPrice(),
+				$cancellationPolicy->getPercentPrice(),
+				$cancellationPolicy->getNights(),
+				$this->bookingRules->getCancellationPolicy()->getCurrencyCode()
+			);
+		}
+		return $cancellationPolicies;
 	}
 }
