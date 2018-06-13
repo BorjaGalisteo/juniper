@@ -4,6 +4,8 @@ namespace StayForLong\Juniper\Infrastructure\Transformer;
 
 
 use Carbon\Carbon;
+use Exception;
+use Throwable;
 use Juniper\Webservice\JP_BookingCode;
 use Juniper\Webservice\JP_HotelOptionBookingRules;
 use StayForLong\Juniper\Domain\Hotel\BookingRules;
@@ -32,7 +34,8 @@ class BookingRulesTransformer
 		$hotel_code,
 		$reference,
 		$comments = []
-	) {
+	)
+	{
 		$this->bookingRules = $bookingRules;
 		$this->hotel_code   = $hotel_code;
 		$this->reference    = $reference;
@@ -74,20 +77,20 @@ class BookingRulesTransformer
 	private function getCancellationPolicies(): array
 	{
 		$cancellationPolicies = [];
-		if (empty($this->bookingRules->getCancellationPolicy()->getPolicyRules())) {
+		try {
+			foreach ($this->bookingRules->getCancellationPolicy()->getPolicyRules() as $cancellationPolicy) {
+				$cancellationPolicies[] = new CancellationPolicy(
+					Carbon::parse($cancellationPolicy->getDateFrom() . " " . $cancellationPolicy->getDateFromHour()),
+					Carbon::parse($cancellationPolicy->getDateTo() . " " . $cancellationPolicy->getDateToHour()),
+					$cancellationPolicy->getFixedPrice(),
+					$cancellationPolicy->getPercentPrice(),
+					$cancellationPolicy->getNights(),
+					$this->bookingRules->getCancellationPolicy()->getCurrencyCode()
+				);
+			}
+			return $cancellationPolicies;
+		} catch (Throwable | Exception $e) {
 			return $cancellationPolicies;
 		}
-
-		foreach ($this->bookingRules->getCancellationPolicy()->getPolicyRules() as $cancellationPolicy) {
-			$cancellationPolicies[] = new CancellationPolicy(
-				Carbon::parse($cancellationPolicy->getDateFrom() . " " . $cancellationPolicy->getDateFromHour()),
-				Carbon::parse($cancellationPolicy->getDateTo() . " " . $cancellationPolicy->getDateToHour()),
-				$cancellationPolicy->getFixedPrice(),
-				$cancellationPolicy->getPercentPrice(),
-				$cancellationPolicy->getNights(),
-				$this->bookingRules->getCancellationPolicy()->getCurrencyCode()
-			);
-		}
-		return $cancellationPolicies;
 	}
 }
