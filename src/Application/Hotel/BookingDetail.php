@@ -18,17 +18,18 @@ class BookingDetail
 	 * @var JuniperWebService
 	 */
 	private $juniperWebService;
-
-
+	/** @var  */
+	private $reservationLocator;
 
 	/**
 	 * BookingDetail constructor.
 	 * @param JuniperWebService $juniperWebService
-	 * @param string $reservationLocator
+	 * @param $reservationLocator
 	 */
-	public function __construct(JuniperWebService $juniperWebService )
+	public function __construct(JuniperWebService $juniperWebService, $reservationLocator)
 	{
 		$this->juniperWebService  = $juniperWebService;
+		$this->reservationLocator = $reservationLocator;
 	}
 
 
@@ -36,11 +37,11 @@ class BookingDetail
 	 * @param $reservationLocator
 	 * @return ReadBookingResponse
 	 */
-	public function __invoke(string $reservationLocator)
+	public function __invoke()
 	{
 		$readBookingRQ = new JP_ReadRQ(WebService::JUNIPER_WS_VERSION, WebService::JUNIPER_WS_VERSION);
 		$readBookingRQ->setLogin($this->juniperWebService->login());
-		$readBookingRQ->setReadRequest(new JP_ReadRequest($reservationLocator));
+		$readBookingRQ->setReadRequest(new JP_ReadRequest($this->reservationLocator));
 		$readBooking = new ReadBooking($readBookingRQ);
 
 		return $this->juniperWebService->service()->ReadBooking($readBooking);
