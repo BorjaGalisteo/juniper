@@ -41,7 +41,7 @@ class BookingDetail
 	{
 		$readBookingRQ = new JP_ReadRQ(WebService::JUNIPER_WS_VERSION, WebService::JUNIPER_WS_VERSION);
 		$readBookingRQ->setLogin($this->juniperWebService->login());
-		$readBookingRQ->setReadRequest(new JP_ReadRequest($this->reservationLocator));
+		$readBookingRQ->setReadRequest(new JP_ReadRequest($this->reservationLocator->value()));
 		$readBooking = new ReadBooking($readBookingRQ);
 
 		return $this->juniperWebService->service()->ReadBooking($readBooking);
